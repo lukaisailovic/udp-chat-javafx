@@ -47,7 +47,6 @@ public class LoginView extends Stage {
 	private void setActions() {
 		this.btnConnect.setOnAction(e -> {
 			String usernameText = this.tfUsername.getText();
-
 			try {
 				this.controller.setUsername(usernameText);
 				this.controller.notifyServer(NotificationStatus.CONNECTED);

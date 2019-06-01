@@ -15,6 +15,9 @@ public class NotificationListener implements Runnable {
 	private int notificationsPort = 32323;
 	private String onlineStatusUpdateStartPattern = "---START STATUS UPDATE---";
 	private String onlineStatusUpdateEndPattern = "---END STATUS UPDATE---";
+	
+	private String onlineUsersStartPattern = "---START ONLINE U UPDATE---";
+	private String onlineUsersEndPattern = "---END ONLINE U UPDATE---";
 	private String delimiter = ";";
 	
 	
@@ -74,6 +77,11 @@ public class NotificationListener implements Runnable {
 		for (User u : controller.getUsers()) {
 			if (!u.equals(user)) {
 				controller.sendMessage(u,this.buildNotificationMessage(user.getUsername(), type));
+				System.out.println("Updating "+u.getUsername()+"'s list of online users");
+			} 
+			if (u.equals(user) && type.equals(NotificationStatus.CONNECTED)){
+				System.out.println("sending online users list to "+u.getUsername());				
+				controller.sendMessage(u, this.buildOnlineUsersList(user.getUsername()));
 			}		
 		}
 				
@@ -91,6 +99,19 @@ public class NotificationListener implements Runnable {
 		sb.append(delimiter);
 		sb.append(username);
 		sb.append(this.onlineStatusUpdateEndPattern);
+		return sb.toString();
+	}
+	
+	private String buildOnlineUsersList(String username) {
+		StringBuilder sb = new StringBuilder();
+		sb.append(this.onlineUsersStartPattern);
+		for (User u : ServerController.getInstance().getUsers()) {
+			if (!u.getUsername().equals(username)) {
+				sb.append(u.getUsername());
+				sb.append(";");
+			}		
+		}
+		sb.append(this.onlineUsersEndPattern);
 		return sb.toString();
 	}
 	

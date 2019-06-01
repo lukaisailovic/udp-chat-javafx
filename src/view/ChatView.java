@@ -1,9 +1,13 @@
 package view;
 
+import java.util.ArrayList;
+import java.util.Observable;
+
 import client.Message;
 import controller.ClientController;
 import controller.ServerController;
 import javafx.application.Platform;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -32,6 +36,7 @@ public class ChatView extends Stage{
 	
 	private Label lblRecipientName = new Label("Recipient name:");
 	private TextField tfRecipient = new TextField();
+	private ComboBox<String> cbRecipient = new ComboBox<>();
 	private Button btnChangeRecipient = new Button("Change recipient");
 	private Label lblStatus = new Label("You currently can't receive any message");
 	
@@ -52,7 +57,7 @@ public class ChatView extends Stage{
 		// top 
 		HBox hbTop = new HBox(10);
 		hbTop.setPadding(new Insets(15, 10, 5, 10));
-		hbTop.getChildren().addAll(lblChatInfo,lblRecipientName,tfRecipient,btnChangeRecipient,lblStatus);
+		hbTop.getChildren().addAll(lblChatInfo,lblRecipientName,cbRecipient,btnChangeRecipient,lblStatus);
 		hbTop.setAlignment(Pos.CENTER);
 		// end top
 		
@@ -114,7 +119,7 @@ public class ChatView extends Stage{
 		});
 		
 		this.btnChangeRecipient.setOnAction(e -> {
-			String newRecipient = this.tfRecipient.getText();
+			String newRecipient = this.cbRecipient.getSelectionModel().getSelectedItem();
 			ClientController controller = ClientController.getInstance();
 			controller.setRecipient(newRecipient);
 			System.out.println("New recipient is "+controller.getRecipient());
@@ -169,6 +174,26 @@ public class ChatView extends Stage{
 				
 		});
 		
+	}
+	
+	public void addUserToListOfOnlineUsers(String user) {
+		Platform.runLater(new Runnable() {
+			
+			@Override
+			public void run() {	
+				cbRecipient.getItems().add(user);
+			};
+				
+		});
+	}
+	public void removeUserFromListOfOnlineUsers(String user) {
+		Platform.runLater(new Runnable() {
+			
+			@Override
+			public void run() {	
+				cbRecipient.getItems().remove(user);
+			};	
+		});
 	}
 	
 	

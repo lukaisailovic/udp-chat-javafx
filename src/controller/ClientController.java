@@ -59,7 +59,7 @@ public class ClientController {
 		
 		public void sendMessage(Message msg,String recipientPassed) throws Exception{
 			String delimiter = ";";
-			String data = "M"+delimiter+this.username+delimiter+recipientPassed+delimiter+msg.getData();
+			String data = "M"+delimiter+this.username+delimiter+this.recipient+delimiter+msg.getData();
 			DatagramSocket socket = new DatagramSocket(); 
 			byte[] buffer = data.getBytes();
 			DatagramPacket packet = new DatagramPacket(buffer, buffer.length, InetAddress.getByName(this.serverAddress), this.notificationsPort); 																												// paketa
@@ -115,10 +115,17 @@ public class ClientController {
 		}
 		
 		public void addUserToOnlineUsers(String username) {
-			this.onlineUsers.add(username);
+			if (!username.isEmpty()) {
+				this.onlineUsers.add(username);
+				this.chatView.addUserToListOfOnlineUsers(username);
+			}
 		}
 		public void removeUserFromOnlineUsers(String username) {
-			this.onlineUsers.remove(username);
+			if (!username.isEmpty()) {
+				this.onlineUsers.remove(username);
+				this.chatView.removeUserFromListOfOnlineUsers(username);
+			}
+			
 		}
 
 
@@ -136,6 +143,7 @@ public class ClientController {
 
 		public void setRecipient(String recipient) {
 			this.recipient = recipient;
+			System.out.println("New recipient is "+this.recipient);
 		}
 		
 		

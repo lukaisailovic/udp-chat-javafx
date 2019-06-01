@@ -13,6 +13,10 @@ public class ClientMessageListener implements Runnable {
 	private int port = 2019;
 	private String onlineStatusUpdateStartPattern = "---START STATUS UPDATE---";
 	private String onlineStatusUpdateEndPattern = "---END STATUS UPDATE---";
+	
+	private String onlineUsersStartPattern = "---START ONLINE U UPDATE---";
+	private String onlineUsersEndPattern = "---END ONLINE U UPDATE---";
+	
 	private String delimiter = ";";
 	
 	
@@ -49,20 +53,29 @@ public class ClientMessageListener implements Runnable {
 				String receivedText = new String(buffer).trim();
 				
 				if(receivedText.startsWith(this.onlineStatusUpdateStartPattern)) {
+					System.out.println("Should update list of online users");
 					this.handleOnlineStatusUpdate(receivedText);
-				} else {
+					System.out.println(receivedText);
+					continue;
+				} 
+				if(receivedText.startsWith(this.onlineUsersStartPattern)) {
+					System.out.println("Received list of online users");
+					System.out.println(receivedText);
+					this.handleOnlineUsersList(receivedText);
+					continue;
+				} 
 					
-					String[] strArr = receivedText.split(delimiter);
-					String data = strArr[1];
-					String recipient = strArr[0];
-					System.out.println("NEW DATA: "+receivedText);
-					if (recipient.equals(ClientController.getInstance().getRecipient())) {
-						Message msg = new Message(data, recipient); // 				
-						ClientController.getInstance().getChatView().addMessage(msg,false); // handle received msg
-						System.out.println("New message from "+senderAddress+ " from port " +senderPort+ " ["+msg+"]");
-					}
-										
+				String[] strArr = receivedText.split(delimiter);
+				String data = strArr[1];
+				String recipient = strArr[0];
+				System.out.println("NEW DATA: "+receivedText);
+				if (recipient.equals(ClientController.getInstance().getRecipient())) {
+					Message msg = new Message(data, recipient); // 				
+					ClientController.getInstance().getChatView().addMessage(msg,false); // handle received msg
+					System.out.println("New message from "+senderAddress+ " from port " +senderPort+ " ["+msg+"]");
 				}
+										
+				
 				
 				
 			} catch (Exception e) {
@@ -75,11 +88,21 @@ public class ClientMessageListener implements Runnable {
 		}
 	}
 	
-	
+	private void handleOnlineUsersList(String data) {
+		int startIndex = data.indexOf(this.onlineUsersStartPattern);
+		int endIndex = data.indexOf(this.onlineUsersEndPattern);
+		String truncatedData = data.substring(startIndex+this.onlineUsersStartPattern.length(), endIndex);
+		
+		String[] strArr = truncatedData.split(this.delimiter);
+		
+		for (int i = 0; i < strArr.length; i++) {
+			ClientController.getInstance().addUserToOnlineUsers(strArr[i]);
+		}
+	}
 	public void handleOnlineStatusUpdate(String data) {
 		int startIndex = data.indexOf(this.onlineStatusUpdateStartPattern);
 		int endIndex = data.indexOf(this.onlineStatusUpdateEndPattern);
-		System.out.println(data);
+		//System.out.println(data);
 		String truncatedData = data.substring(startIndex+this.onlineStatusUpdateStartPattern.length(), endIndex);
 		
 		String[] strArr = truncatedData.split(this.delimiter);
@@ -87,11 +110,11 @@ public class ClientMessageListener implements Runnable {
 		String username = strArr[1];
 		
 		if (type.equals("CN")) {
-			//ClientController.getInstance().getChatView().addOnlineUser(username);
+			ClientController.getInstance().addUserToOnlineUsers(username);
 			System.out.println("Should add "+strArr[1]);
 		} 
 		if (type.equals("DC")) {
-			//ClientController.getInstance().getChatView().removeOnlineUser(username);
+			ClientController.getInstance().removeUserFromOnlineUsers(username);
 			System.out.println("Should remove "+strArr[1]);
 		}
 		
