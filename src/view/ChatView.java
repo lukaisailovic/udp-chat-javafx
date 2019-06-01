@@ -86,6 +86,7 @@ public class ChatView extends Stage{
 		this.setScene(sc);
 		this.setTitle("UDP Chat - Client");
 		this.setActions();
+		this.setResizable(false);
 	}
 	
 	
