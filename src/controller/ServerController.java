@@ -18,7 +18,7 @@ public class ServerController {
 	private ArrayList<User> users = new ArrayList<>();
 	
 	
-	private ServerThread st = new ServerThread();
+
 	
 	private ServerController() {
 		this.initializeNotificationListener();
@@ -38,14 +38,7 @@ public class ServerController {
 	}
 	
 	
-	public void testCall(String msg) {
-		try {
-			this.st.test(msg);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+	
 	
 	
 	public void sendMessage(User user, String msg) throws Exception { 
