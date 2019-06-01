@@ -69,14 +69,21 @@ public class ClientMessageListener implements Runnable {
 				String data = strArr[1];
 				String recipient = strArr[0];
 				System.out.println("NEW DATA: "+receivedText);
-				if (recipient.equals(ClientController.getInstance().getRecipient())) {
+				ClientController controller = ClientController.getInstance();
+				if (recipient.equals(controller.getRecipient())) {
 					Message msg = new Message(data, recipient); // 				
-					ClientController.getInstance().getChatView().addMessage(msg,false); // handle received msg
+					controller.getChatView().addMessage(msg,false); // handle received msg
 					System.out.println("New message from "+senderAddress+ " from port " +senderPort+ " ["+msg+"]");
+				} else { 
+					if (controller.getRecipient().isEmpty()) {
+						controller.getChatView().setNotificationText(recipient+ " tried to send you message but you are not listening to anyone");
+					} else {
+						controller.getChatView().setNotificationText(recipient+ " tried to send you message but you are listening to "+controller.getRecipient());
+					}
+					
 				}
 										
-				
-				
+		
 				
 			} catch (Exception e) {
 				System.out.println("Fail");

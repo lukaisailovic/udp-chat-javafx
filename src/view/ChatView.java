@@ -22,6 +22,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
@@ -45,6 +46,8 @@ public class ChatView extends Stage{
 	
 	private TextField tfInput = new TextField();
 	private Button btnChat = new Button("Send");
+	
+	private Label lblNotification = new Label();
 	
 	private BorderPane bp = new BorderPane();
 	
@@ -73,25 +76,32 @@ public class ChatView extends Stage{
 		
 		// bottom
 		HBox hbBottom = new HBox(10);
-		hbBottom.setPadding(new Insets(15,5,15,5));
+		hbBottom.setPadding(new Insets(5,5,10,5));
 		hbBottom.setAlignment(Pos.CENTER_LEFT);
 		hbBottom.getChildren().addAll(tfInput,btnChat);
 		
 		tfInput.setPrefWidth(720);
 		tfInput.setPrefHeight(35);
 		
-		btnChat.setPrefHeight(35);
-		
+		btnChat.setPrefHeight(35);	
 		// end bottom
+		
+	
+		VBox vbBottom = new VBox();
+		vbBottom.setAlignment(Pos.CENTER);
+		vbBottom.setPadding(new Insets(5, 5, 0, 5)); 	// top, right, bottom, left
+		vbBottom.getChildren().addAll(lblNotification,hbBottom);
+		
 		bp.setTop(hbTop);
 		bp.setCenter(chatWindow);
-		bp.setBottom(hbBottom);
+		bp.setBottom(vbBottom);
 
 		Scene sc = new Scene(bp,800,500);
 		this.setScene(sc);
-		this.setTitle("UDP Chat - Client");
+
 		this.setActions();
 		this.setResizable(false);
+		
 	}
 	
 	
@@ -100,7 +110,12 @@ public class ChatView extends Stage{
 			String chatText = this.tfInput.getText();
 			
 			if (chatText.contains(";")) {
-				this.addAlert();
+				this.addAlert("Character not allowed","Characted [ ; ] is used as delimiter and is not allowed to be in message");
+				return;
+			}
+			String recipient = this.tfRecipient.getText();
+			if (recipient.isEmpty()) {
+				this.addAlert("No recipient selected","In order to send message you must select a recipient");
 				return;
 			}
 			
@@ -109,7 +124,7 @@ public class ChatView extends Stage{
 			this.addMessage(msg,true);
 			this.chatWindow.scrollTo(this.chatWindow.getItems().size()-1);
 			this.tfInput.setText("");
-			String recipient = this.tfRecipient.getText();
+			
 			try {
 				this.controller.sendMessage(msg,recipient);
 			} catch (Exception e1) {
@@ -131,7 +146,7 @@ public class ChatView extends Stage{
 			} else {
 				this.lblStatus.setText("You currently can't receive any message");
 			}
-			this.setTitle("Chat window ["+controller.getUsername()+ " - "+controller.getRecipient()+" ]");
+			
 		});
 		
 		bp.addEventHandler(KeyEvent.KEY_PRESSED, e -> {
@@ -143,11 +158,11 @@ public class ChatView extends Stage{
 		
 	}
 	
-	public void addAlert() {
+	public void addAlert(String title, String description) {
 		Alert alert = new Alert(AlertType.WARNING);
 		alert.setTitle("Warning");
-		alert.setHeaderText("Character not allowed");
-		alert.setContentText("Characted [ ; ] is used as delimiter and is not allowed to be in message");
+		alert.setHeaderText(title);
+		alert.setContentText(description);
 
 		alert.showAndWait();
 	}
@@ -194,6 +209,21 @@ public class ChatView extends Stage{
 				cbRecipient.getItems().remove(user);
 			};	
 		});
+	}
+	
+	public void setNotificationText(String msg) {
+		Platform.runLater(new Runnable() {
+			
+			@Override
+			public void run() {	
+				lblNotification.setText(msg);		
+			};
+				
+		});		
+	}
+	
+	public void updateTitle() {
+		this.setTitle("Chat window ["+controller.getUsername()+"]");
 	}
 	
 	

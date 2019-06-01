@@ -91,6 +91,7 @@ public class ClientController {
 		public void showChatView() {
 			loginView.hide();
 			chatView.loadData();
+			chatView.updateTitle();
 			chatView.show();
 		}
 

@@ -38,7 +38,7 @@ public class LoginView extends Stage {
 		bp.setCenter(vbCenter);
 		Scene sc = new Scene(bp,250,400);
 		this.setScene(sc);
-		this.setTitle("UDP Chat - Client Login");
+		this.setTitle("UDP Chat - Login");
 		this.setActions();
 		this.setResizable(false);
 	}
