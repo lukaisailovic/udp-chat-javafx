@@ -3,9 +3,8 @@ package view;
 import java.util.ArrayList;
 import java.util.Observable;
 
+import client.ClientController;
 import client.Message;
-import controller.ClientController;
-import controller.ServerController;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -28,6 +27,7 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
+import server.ServerController;
 
 public class ChatView extends Stage{
 	
@@ -113,7 +113,7 @@ public class ChatView extends Stage{
 				this.addAlert("Character not allowed","Characted [ ; ] is used as delimiter and is not allowed to be in message");
 				return;
 			}
-			String recipient = this.tfRecipient.getText();
+			String recipient = this.cbRecipient.getSelectionModel().getSelectedItem();
 			if (recipient.isEmpty()) {
 				this.addAlert("No recipient selected","In order to send message you must select a recipient");
 				return;
@@ -122,7 +122,7 @@ public class ChatView extends Stage{
 			Message msg = new Message(chatText, this.controller.getUsername());
 			
 			this.addMessage(msg,true);
-			this.chatWindow.scrollTo(this.chatWindow.getItems().size()-1);
+			this.scrollToBottom();
 			this.tfInput.setText("");
 			
 			try {
@@ -184,7 +184,8 @@ public class ChatView extends Stage{
 					txt.setFont(Font.font("Verdana",FontWeight.NORMAL,13));
 				}
 				chatWindow.getItems().add(txt);			
-				chatWindow.refresh();			
+				chatWindow.refresh();	
+				scrollToBottom();
 			};
 				
 		});
@@ -224,6 +225,10 @@ public class ChatView extends Stage{
 	
 	public void updateTitle() {
 		this.setTitle("Chat window ["+controller.getUsername()+"]");
+	}
+	
+	private void scrollToBottom() {
+		this.chatWindow.scrollTo(this.chatWindow.getItems().size()-1);
 	}
 	
 	

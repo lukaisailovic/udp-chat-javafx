@@ -1,6 +1,6 @@
 package view;
 
-import controller.ClientController;
+import client.ClientController;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;

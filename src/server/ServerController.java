@@ -1,12 +1,10 @@
-package controller;
+package server;
 
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.util.ArrayList;
 
-import server.NotificationListener;
-import server.User;
 import shared.Notification;
 
 public class ServerController {

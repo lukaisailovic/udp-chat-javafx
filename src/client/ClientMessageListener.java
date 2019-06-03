@@ -6,8 +6,6 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 
-import controller.ClientController;
-
 public class ClientMessageListener implements Runnable {
 	
 	private int port = 2019;

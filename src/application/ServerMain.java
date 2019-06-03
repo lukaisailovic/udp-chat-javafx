@@ -1,8 +1,8 @@
 package application;
 	
-import controller.ServerController;
 import javafx.application.Application;
 import javafx.stage.Stage;
+import server.ServerController;
 
 
 public class ServerMain extends Application {

@@ -1,12 +1,10 @@
-package controller;
+package client;
 
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.util.ArrayList;
 
-import client.ClientMessageListener;
-import client.Message;
 import shared.Notification;
 import shared.NotificationStatus;
 import view.ChatView;

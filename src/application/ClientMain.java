@@ -1,6 +1,6 @@
 package application;
 
-import controller.ClientController;
+import client.ClientController;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import shared.NotificationStatus;
