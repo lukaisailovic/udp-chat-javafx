@@ -73,7 +73,7 @@ public class ClientMessageListener implements Runnable {
 					controller.getChatView().addMessage(msg,false); // handle received msg
 					System.out.println("New message from "+senderAddress+ " from port " +senderPort+ " ["+msg+"]");
 				} else { 
-					if (controller.getRecipient().isEmpty()) {
+					if (controller.getRecipient() == null) {
 						controller.getChatView().setNotificationText(recipient+ " tried to send you message but you are not listening to anyone");
 					} else {
 						controller.getChatView().setNotificationText(recipient+ " tried to send you message but you are listening to "+controller.getRecipient());

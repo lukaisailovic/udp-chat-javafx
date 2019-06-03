@@ -2,6 +2,7 @@ package view;
 
 import java.util.ArrayList;
 import java.util.Observable;
+import java.util.concurrent.TimeUnit;
 
 import client.ClientController;
 import client.Message;
@@ -48,6 +49,7 @@ public class ChatView extends Stage{
 	private Button btnChat = new Button("Send");
 	
 	private Label lblNotification = new Label();
+	private Button btnDismissNotification = new Button("X");
 	
 	private BorderPane bp = new BorderPane();
 	
@@ -86,11 +88,16 @@ public class ChatView extends Stage{
 		btnChat.setPrefHeight(35);	
 		// end bottom
 		
+		this.btnDismissNotification.setVisible(false);
+		HBox hbNotification = new HBox(15);
+		hbNotification.setAlignment(Pos.CENTER);
+		hbNotification.setPadding(new Insets(5, 5, 0, 5)); 
+		hbNotification.getChildren().addAll(lblNotification,btnDismissNotification);
 	
 		VBox vbBottom = new VBox();
 		vbBottom.setAlignment(Pos.CENTER);
 		vbBottom.setPadding(new Insets(5, 5, 0, 5)); 	// top, right, bottom, left
-		vbBottom.getChildren().addAll(lblNotification,hbBottom);
+		vbBottom.getChildren().addAll(hbNotification,hbBottom);
 		
 		bp.setTop(hbTop);
 		bp.setCenter(chatWindow);
@@ -156,6 +163,11 @@ public class ChatView extends Stage{
 	        }
 	    });
 		
+		this.btnDismissNotification.setOnAction(e -> {
+			this.lblNotification.setText("");
+			this.btnDismissNotification.setVisible(false);
+		});
+		
 	}
 	
 	public void addAlert(String title, String description) {
@@ -217,11 +229,14 @@ public class ChatView extends Stage{
 			
 			@Override
 			public void run() {	
-				lblNotification.setText(msg);		
+				btnDismissNotification.setVisible(true);
+				lblNotification.setText(msg);	
 			};
 				
 		});		
 	}
+	
+	
 	
 	public void updateTitle() {
 		this.setTitle("Chat window ["+controller.getUsername()+"]");
